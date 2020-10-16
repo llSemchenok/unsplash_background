@@ -3,14 +3,13 @@ import re
 from subprocess import run, PIPE
 from urllib.request import urlretrieve
 
-import argparse
 
 __NAME_PHOTO__ = 'photo.jpeg'
 __PATH_TO_PHOTO__ = f'{os.path.abspath(__NAME_PHOTO__)}'
 
-class DesktopBackground(object):
+class DesktopWallpaper:
     
-    def __init__ (self, **kwargs):
+    def __init__ (self, config):
         self.width,self.height = (kwargs['width'],kwargs['height']) if ('width' in kwargs and 'height' in kwargs) else self.__info_desktop__()
         self.search_filter = kwargs['filter'] if 'filter' in kwargs else []
         if 'auto' in kwargs:
@@ -34,6 +33,3 @@ class DesktopBackground(object):
     def set_desktop_background(self, width, height, *search_filter):
         if self.__get_photo__(width,height,*search_filter) == 200:
             os.system(f"gsettings set org.gnome.desktop.background picture-uri file://{__PATH_TO_PHOTO__}")
-
-if __name__ == "__main__":
-    DesktopBackground(w=3840,h=2160)
