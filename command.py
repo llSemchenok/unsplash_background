@@ -4,7 +4,7 @@ from queue import Queue
 from time import sleep
 from datetime import datetime
 import os
-from urllib.request import urlretrieve
+from urllib.request import urlretrieve, URLError
 import asyncio
 
 
@@ -28,8 +28,12 @@ class GetPhoto(Command):
     async def __getPhoto__(self) -> None:
         path_to_save = f'{self._service._config["pathToWallpapers"]}/{str(datetime.now())}.jpeg'
         url = f'https://source.unsplash.com/{self._width}x{self._height}' if not self._search_filter else f'https://source.unsplash.com/{self._width}x{self._height}/?{",".join(self._search_filter)}'
-        urlretrieve(url, path_to_save)
-        self._service._wallpapersList.append(str(path_to_save))
+        try:
+            urlretrieve(url, path_to_save)
+            self._service._wallpapersList.append(str(path_to_save))
+        except URLError as identifier:
+            identifier
+        
 
 
 class SetDesktopWallpaper(Command):
